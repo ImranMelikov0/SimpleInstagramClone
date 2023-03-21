@@ -35,12 +35,16 @@ class SigninActivity : AppCompatActivity() {
     fun Loginclick(view: View){
         var email=binding.editTextTextEmailAddress.text.toString()
         var password=binding.editTextTextPassword.text.toString()
+        if(email.equals("")||password.equals("")){
+            Toast.makeText(this,"Enter email and password",Toast.LENGTH_SHORT).show()
+        }else{
         auth.signInWithEmailAndPassword(email, password).addOnFailureListener {
             Toast.makeText(this,it.localizedMessage,Toast.LENGTH_SHORT).show()
         }.addOnSuccessListener {
             var intent=Intent(this@SigninActivity,MainActivity::class.java)
             startActivity(intent)
             finish()
+        }
         }
     }
 }
