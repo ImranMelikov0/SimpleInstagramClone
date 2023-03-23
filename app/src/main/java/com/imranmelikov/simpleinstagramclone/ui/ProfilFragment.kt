@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.imranmelikov.simpleinstagramclone.Activities.ProfilActivity
+import com.imranmelikov.simpleinstagramclone.Activities.UploadActivity
 import com.imranmelikov.simpleinstagramclone.databinding.FragmentProfilBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,6 +27,10 @@ class ProfilFragment : Fragment() {
         val view=binding.root
         binding.editAccountSettingBtn.setOnClickListener {
             var intent=Intent(this.context, ProfilActivity::class.java)
+            startActivity(intent)
+        }
+        binding.sharetext.setOnClickListener {
+            var intent=Intent(it.context,UploadActivity::class.java)
             startActivity(intent)
         }
         return view
