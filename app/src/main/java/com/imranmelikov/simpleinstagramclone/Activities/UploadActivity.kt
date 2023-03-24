@@ -16,19 +16,31 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.imranmelikov.simpleinstagramclone.R
 import com.imranmelikov.simpleinstagramclone.databinding.ActivityUploadBinding
+import java.util.UUID
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding:ActivityUploadBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionlauncher: ActivityResultLauncher<String>
     private  var selectedimage:Uri?=null
+    private lateinit var auth:FirebaseAuth
+    private lateinit var db:FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=ActivityUploadBinding.inflate(layoutInflater)
        val view= binding.root
         setContentView(view)
+
+        auth=Firebase.auth
+        db=Firebase.firestore
 
         registerlauncher()
     }
@@ -75,4 +87,33 @@ class UploadActivity : AppCompatActivity() {
                 }
             })
     }
+//    fun Shareclick(view:View){
+//        val uuid=UUID.randomUUID()
+//        val imagename="$uuid.jpg"
+//        val storage=Firebase.storage
+//        var reference=storage.reference
+//        var imagereference=reference.child("Images").child(imagename)
+//        if(selectedimage!=null){
+//            imagereference.putFile(selectedimage!!).addOnSuccessListener {
+//                var uploadreference=storage.reference.child("Images").child(imagename)
+//                uploadreference.downloadUrl.addOnSuccessListener {
+//                    var downloadurl=it.toString()
+//                    if(auth.currentUser!=null){
+//                        var posthasmap=HashMap<String,Any>()
+//                        posthasmap.put("downloadurl",downloadurl)
+//                        posthasmap.put("comment",binding.commenttext.text.toString())
+//                        posthasmap.put("email",auth.currentUser!!.email.toString())
+//
+//                        db.collection("Post").add(posthasmap).addOnSuccessListener {
+//                            finish()
+//                        }.addOnFailureListener {
+//                            Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                }.addOnFailureListener {
+//                    Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
 }
