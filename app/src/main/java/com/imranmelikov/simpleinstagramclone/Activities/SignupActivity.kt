@@ -75,8 +75,8 @@ class SignupActivity : AppCompatActivity() {
         usermap["password"]=password
         usermap["username"]=username
         usermap["bio"]="I am using SimpleInstagramClone"
-        usermap["profile"]= R.drawable.profile
-        db.collection(username).add(usermap).addOnSuccessListener {
+        usermap["profile"]= R.drawable.app_ic
+        db.collection(email.toString()).add(usermap).addOnSuccessListener {
             finish()
         }.addOnFailureListener {
             Toast.makeText(this@SignupActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
