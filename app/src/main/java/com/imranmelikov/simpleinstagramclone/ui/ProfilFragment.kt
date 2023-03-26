@@ -84,9 +84,9 @@ class ProfilFragment : Fragment() {
                                                     val documnets=value.documents
                                                     for(document2 in documnets){
 
-                                                        var image = document2.get("downloadurl") as String
+                                                        var image = document2.get("downloadurl")
                                                         Glide.with(this)
-                                                            .load(image)
+                                                            .load(image.toString())
                                                             .into(binding.profileImageSearchRecyclerview)
 
                                                         var profilename = document2.get("profilename")

@@ -51,7 +51,7 @@ class UploadActivity : AppCompatActivity() {
                     Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
                 if(ActivityCompat.shouldShowRequestPermissionRationale(it.context as Activity,
                         Manifest.permission.READ_MEDIA_IMAGES)){
-                    Snackbar.make(it,"Permission need", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
+                    Snackbar.make(it,"Permission needed", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
                         View.OnClickListener {
                             permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
                     })
@@ -87,33 +87,71 @@ class UploadActivity : AppCompatActivity() {
                 }
             })
     }
-//    fun Shareclick(view:View){
-//        val uuid=UUID.randomUUID()
-//        val imagename="$uuid.jpg"
-//        val storage=Firebase.storage
-//        var reference=storage.reference
-//        var imagereference=reference.child("Images").child(imagename)
-//        if(selectedimage!=null){
-//            imagereference.putFile(selectedimage!!).addOnSuccessListener {
-//                var uploadreference=storage.reference.child("Images").child(imagename)
-//                uploadreference.downloadUrl.addOnSuccessListener {
-//                    var downloadurl=it.toString()
-//                    if(auth.currentUser!=null){
-//                        var posthasmap=HashMap<String,Any>()
-//                        posthasmap.put("downloadurl",downloadurl)
-//                        posthasmap.put("comment",binding.commenttext.text.toString())
-//                        posthasmap.put("email",auth.currentUser!!.email.toString())
-//
-//                        db.collection("Post").add(posthasmap).addOnSuccessListener {
-//                            finish()
-//                        }.addOnFailureListener {
-//                            Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                }.addOnFailureListener {
-//                    Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//    }
+    fun Shareclick(view:View){
+        val uuid=UUID.randomUUID()
+        val imagename="$uuid.jpg"
+        val storage=Firebase.storage
+        var reference=storage.reference
+        var imagereference=reference.child("Image").child(imagename)
+        if(selectedimage!=null){
+            imagereference.putFile(selectedimage!!).addOnSuccessListener {
+                var uploadreference=storage.reference.child("Image").child(imagename)
+                uploadreference.downloadUrl.addOnSuccessListener {
+                    var downloadimage=it.toString()
+                    if(auth.currentUser!=null){
+                        var posthasmap=HashMap<String,Any>()
+                        posthasmap.put("downloadimage",downloadimage)
+                        posthasmap.put("comment",binding.commenttext.text.toString())
+                        db.collection(auth.currentUser!!.email.toString()).addSnapshotListener { value, error ->
+                            if(error!=null){
+                                Toast.makeText(this,error.localizedMessage,Toast.LENGTH_SHORT).show()
+                            }else{
+                                if(value!=null){
+                                    if(!value.isEmpty){
+                                        val documents=value.documents
+                                        for(document in documents){
+                                            val username=document.get("username")
+                                            posthasmap.put("username",username.toString())
+                                            db.collection(username.toString()).addSnapshotListener { value, error ->
+                                                if(error!=null){
+                                                    Toast.makeText(this,error.localizedMessage,Toast.LENGTH_SHORT).show()
+                                                }else{
+                                                    if(value!=null){
+                                                        if(!value.isEmpty){
+                                                            val documents=value.documents
+                                                            for(document1 in documents){
+                                                               val profilename=document1.get("profilename")
+                                                                posthasmap.put("profilename",profilename.toString())
+                                                                db.collection("Posts").add(posthasmap).addOnSuccessListener {
+                                                                    finish()
+                                                                }.addOnFailureListener {
+                                                                    Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            db.collection("Posts").add(posthasmap).addOnSuccessListener {
+                                                finish()
+                                            }.addOnFailureListener {
+                                                Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
+                    }
+                }.addOnFailureListener {
+                    Toast.makeText(this@UploadActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+                }
+            }
+        }else{
+            Toast.makeText(this,"Choose image",Toast.LENGTH_SHORT).show()
+        }
+    }
 }

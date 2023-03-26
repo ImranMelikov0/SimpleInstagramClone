@@ -96,7 +96,7 @@ class ProfilActivity : AppCompatActivity() {
                     Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
                 if(ActivityCompat.shouldShowRequestPermissionRationale(it.context as Activity,
                         Manifest.permission.READ_MEDIA_IMAGES)){
-                    Snackbar.make(it,"Permission need", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
+                    Snackbar.make(it,"Permission needed", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
                         View.OnClickListener {
                             permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
                         })
@@ -137,7 +137,7 @@ class ProfilActivity : AppCompatActivity() {
 
     fun Save(view:View){
         if(binding.BioProfile.text.toString().equals("")||binding.usernameProfile.text.toString().equals("")){
-            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Write name,bio and select image",Toast.LENGTH_SHORT).show()
         }else{
             val uuid= UUID.randomUUID()
             val imagename="$uuid.jpg"
@@ -182,7 +182,7 @@ class ProfilActivity : AppCompatActivity() {
                     }
                 }
             }else{
-                Toast.makeText(this,"Write username and bio",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Select image",Toast.LENGTH_SHORT).show()
             }
         }
     }
