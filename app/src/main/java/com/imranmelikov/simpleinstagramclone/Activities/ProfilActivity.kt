@@ -125,6 +125,9 @@ class ProfilActivity : AppCompatActivity() {
             })
     }
     fun Save(view:View){
+        if(binding.BioProfile.text.toString().equals("")||binding.usernameProfile.text.toString().equals("")){
+            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
+        }else{
         val uuid= UUID.randomUUID()
         val imagename="$uuid.jpg"
         val storage=Firebase.storage
@@ -136,21 +139,77 @@ class ProfilActivity : AppCompatActivity() {
                 uploadreference.downloadUrl.addOnSuccessListener {
                     var downloadurl=it.toString()
                     if(auth.currentUser!=null){
-                        var posthasmap=HashMap<String,Any>()
-                        posthasmap.put("downloadurl",downloadurl)
-                        posthasmap.put("username",binding.usernameProfile.text.toString())
-                        posthasmap.put("bio",binding.BioProfile.text.toString())
+                            var posthasmap = HashMap<String, Any>()
+                            posthasmap.put("downloadurl", downloadurl)
+                            posthasmap.put("profilename", binding.usernameProfile.text.toString())
+                            posthasmap.put("profilebio", binding.BioProfile.text.toString())
 
-                        db.collection("Post").add(posthasmap).addOnSuccessListener {
-                            finish()
-                        }.addOnFailureListener {
-                            Toast.makeText(this@ProfilActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
-                        }
+                            db.collection("Post").add(posthasmap).addOnSuccessListener {
+                                finish()
+                            }.addOnFailureListener {
+                                Toast.makeText(this@ProfilActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                            }
                     }
                 }.addOnFailureListener {
                     Toast.makeText(this@ProfilActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
                 }
             }
+        }else{
+            Toast.makeText(this,"Write username and bio",Toast.LENGTH_SHORT).show()
         }
     }
+    }
+
+//    fun Save(view:View){
+//        if(binding.BioProfile.text.toString().equals("")||binding.usernameProfile.text.toString().equals("")){
+//            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
+//        }else{
+//            val uuid= UUID.randomUUID()
+//            val imagename="$uuid.jpg"
+//            val storage=Firebase.storage
+//            var reference=storage.reference
+//            var imagereference=reference.child("Images").child(imagename)
+//            if(selectedimage!=null){
+//                imagereference.putFile(selectedimage!!).addOnSuccessListener {
+//                    var uploadreference=storage.reference.child("Images").child(imagename)
+//                    uploadreference.downloadUrl.addOnSuccessListener {
+//                        var downloadurl=it.toString()
+//                        if(auth.currentUser!=null){
+//                            var posthasmap = HashMap<String, Any>()
+//                            posthasmap.put("downloadurl", downloadurl)
+//                            posthasmap.put("profilename", binding.usernameProfile.text.toString())
+//                            posthasmap.put("profilebio", binding.BioProfile.text.toString())
+//
+//                            db.collection(auth.currentUser!!.email.toString()).addSnapshotListener { value, error ->
+//                                if(error!=null){
+//                                    Toast.makeText(this,error.localizedMessage,Toast.LENGTH_SHORT).show()
+//                                }else{
+//                                    if(value!=null){
+//                                        if(!value.isEmpty){
+//                                            var documents=value.documents
+//                                            for(document in documents){
+//                                                var profileemail=document.get("email").toString()
+//                                                db.collection(profileemail).add(posthasmap).addOnSuccessListener {
+//                                                    finish()
+//                                                }.addOnFailureListener {
+//                                                    Toast.makeText(this@ProfilActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//
+//
+//                        }
+//                    }.addOnFailureListener {
+//                        Toast.makeText(this@ProfilActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }else{
+//                Toast.makeText(this,"Write username and bio",Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
+//}
 }

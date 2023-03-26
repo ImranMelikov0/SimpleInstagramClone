@@ -46,26 +46,63 @@ class ProfilFragment : Fragment() {
             var intent=Intent(it.context,UploadActivity::class.java)
             startActivity(intent)
         }
+
         var email=auth.currentUser!!.email
-        db.collection(email.toString()).addSnapshotListener { value, error ->
-            if(error!=null){
-                Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
-            }else{
-                if(value!=null){
-                    if(!value.isEmpty){
-                        val documnets=value.documents
-                        for(document in documnets){
-                            var username=document.get("username") as String
-                            var bio=document.get("bio") as String
-                            binding.profileFragmentUsername.text=username
-                            binding.fullNameProfileFrag.text=username
-                            binding.BioProfile.text=bio
+        if(db.collection("Post").toString().isEmpty()){
+            db.collection(email.toString()).addSnapshotListener { value, error ->
+                if(error!=null){
+                    Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
+                }else{
+                    if(value!=null){
+                        if(!value.isEmpty){
+                            val documnets=value.documents
+                            for(document in documnets){
+                                var username=document.get("username") as String
+                                var bio=document.get("bio") as String
+                                binding.profileFragmentUsername.text=username
+                                binding.fullNameProfileFrag.text=username
+                                binding.BioProfile.text=bio
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            db.collection("Post").addSnapshotListener { value, error ->
+                if(error!=null){
+                    Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
+                }else{
+                    if(value!=null){
+                        if(!value.isEmpty){
+                            val documnets=value.documents
+                            for(document in documnets){
+
+                                var image = document.get("downloadurl") as String
+                                Glide.with(this)
+                                    .load(image)
+                                    .into(binding.profileImageSearchRecyclerview)
+
+                                var username1 = document.get("profilename")
+                                var bio1 = document.get("profilebio")
+                                binding.profileFragmentUsername.text = username1.toString()
+                                binding.fullNameProfileFrag.text = username1.toString()
+                                binding.BioProfile.text = bio1.toString()
+
+                            }
                         }
                     }
                 }
             }
         }
-//        db.collection("Post").addSnapshotListener { value, error ->
+
+
+
+        return view
+    }
+
+//    var email=auth.currentUser!!.email
+//    if(db.collection("Post").toString().isEmpty()){
+//        db.collection(email.toString()).addSnapshotListener { value, error ->
 //            if(error!=null){
 //                Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
 //            }else{
@@ -73,24 +110,63 @@ class ProfilFragment : Fragment() {
 //                    if(!value.isEmpty){
 //                        val documnets=value.documents
 //                        for(document in documnets){
-//                           var username=document.get("username") as String
+//                            var username=document.get("username") as String
 //                            var bio=document.get("bio") as String
-//                            var image=document.get("downloadurl") as String
 //                            binding.profileFragmentUsername.text=username
 //                            binding.fullNameProfileFrag.text=username
 //                            binding.BioProfile.text=bio
-//  var image=document.get("downloadurl") as String
-//                            Glide.with(this)
-//                                .load(image)
-//                                .into(binding.profileImageSearchRecyclerview)
-//
 //                        }
 //                    }
 //                }
 //            }
 //        }
-
-        return view
-    }
-
+//    }else{
+//        db.collection(email.toString()).addSnapshotListener { value, error ->
+//            if(error!=null){
+//                Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
+//            }else {
+//                if (value != null) {
+//                    if (!value.isEmpty) {
+//                        val documnets = value.documents
+//                        for (document in documnets) {
+//                            var profileemail = document.get("email").toString()
+//
+//                            db.collection(profileemail).addSnapshotListener { value, error ->
+//                                if (error != null) {
+//                                    Toast.makeText(
+//                                        this.context,
+//                                        error.localizedMessage,
+//                                        Toast.LENGTH_SHORT
+//                                    ).show()
+//                                } else {
+//                                    if (value != null) {
+//                                        if (!value.isEmpty) {
+//                                            val documnets = value.documents
+//                                            for (document in documnets) {
+//
+//                                                var image =
+//                                                    document.get("downloadurl").toString()
+//                                                Glide.with(this)
+//                                                    .load(image)
+//                                                    .into(binding.profileImageSearchRecyclerview)
+//
+//                                                var username1 = document.get("profilename")
+//                                                var bio1 = document.get("profilebio")
+//                                                binding.profileFragmentUsername.text =
+//                                                    username1.toString()
+//                                                binding.fullNameProfileFrag.text =
+//                                                    username1.toString()
+//                                                binding.BioProfile.text = bio1.toString()
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 }
