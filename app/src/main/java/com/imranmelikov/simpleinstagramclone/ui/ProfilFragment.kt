@@ -54,11 +54,12 @@ class ProfilFragment : Fragment() {
                 if(value!=null){
                     if(!value.isEmpty){
                         val documnets=value.documents
-                        for(document1 in documnets){
-                            var username=document1.get("username") as String
-                            var bio=document1.get("bio") as String
+                        for(document in documnets){
+                            var username=document.get("username") as String
+                            var bio=document.get("bio") as String
+                            var email=document.get("email") as String
                             binding.profileFragmentUsername.text=username
-                            binding.fullNameProfileFrag.text=username
+                            binding.fullNameProfileFrag.text=email
                             binding.BioProfile.text=bio
                         }
                     }
@@ -72,10 +73,10 @@ class ProfilFragment : Fragment() {
                     if(value!=null){
                         if(!value.isEmpty){
                             val documnets=value.documents
-                            for(document in documnets){
-                                var username1=document.get("username")
+                            for(document1 in documnets){
+                                var username=document1.get("username")
 
-                                    db.collection(username1.toString()).addSnapshotListener { value, error ->
+                                    db.collection(username.toString()).addSnapshotListener { value, error ->
                                         if(error!=null){
                                             Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
                                         }else{
@@ -89,11 +90,11 @@ class ProfilFragment : Fragment() {
                                                             .load(image)
                                                             .into(binding.profileImageSearchRecyclerview)
 
-                                                        var username1 = document2.get("profilename")
-                                                        var bio1 = document2.get("profilebio")
-                                                        binding.profileFragmentUsername.text = username1.toString()
-                                                        binding.fullNameProfileFrag.text = username1.toString()
-                                                        binding.BioProfile.text = bio1.toString()
+                                                        var profileusername = document2.get("profilename")
+                                                        var profilebio = document2.get("profilebio")
+                                                        binding.profileFragmentUsername.text = profileusername.toString()
+                                                        binding.fullNameProfileFrag.text = email.toString()
+                                                        binding.BioProfile.text = profilebio.toString()
 
                                                     }
                                                 }
