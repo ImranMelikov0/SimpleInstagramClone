@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         getdata()
        homefragmentarraylist= ArrayList()
         homefragmentadapter= AdapterRV_home(homefragmentarraylist)
-        binding.recyclerviewHome.layoutManager= GridLayoutManager(context,1)
+        binding.recyclerviewHome.layoutManager= GridLayoutManager(context,100)
         binding.recyclerviewHome.adapter=homefragmentadapter
 
         return view
