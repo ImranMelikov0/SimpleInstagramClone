@@ -25,6 +25,5 @@ class AdapterRV_home(var homefragmentarraylist:ArrayList<com.imranmelikov.simple
         Glide.with(holder.itemView.context)
             .load(homefragment.image)
             .into(holder.binding.profileImageSearchRecyclerview)
-//        holder.binding.followbtnHome
     }
 }

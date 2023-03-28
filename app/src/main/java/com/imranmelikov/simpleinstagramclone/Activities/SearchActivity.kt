@@ -48,30 +48,44 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerviewSearchActivity.adapter=searchadapter
 
     }
-
     fun getdata(){
-        db.collection("Posts").addSnapshotListener { value, error ->
+        var email=auth.currentUser!!.email
+        db.collection(email.toString()).addSnapshotListener { value, error ->
             if(error!=null){
                 Toast.makeText(this,error.localizedMessage, Toast.LENGTH_SHORT).show()
             }else{
                 if(value!=null){
                     if(!value.isEmpty){
-                       userarraylist.clear()
-                        val documents=value.documents
-                        for(document in documents){
-                            val downloadimage=document.get("downloadimage")
-                            val username=document.get("username")
-                            val profilename=document.get("profilename")
-                            if(profilename!=null){
-                                val user=User(profilename.toString(),downloadimage.toString())
-                                userarraylist.add(user)
-                            }else{
-                                val user=User(username.toString(),downloadimage.toString())
-                                userarraylist.add(user)
-                            }
+                        val documnets=value.documents
+                        for(document1 in documnets){
+                            var username1=document1.get("username")
+                            db.collection("User").addSnapshotListener { value, error ->
+                                if(error!=null){
+                                    Toast.makeText(this,error.localizedMessage, Toast.LENGTH_SHORT).show()
+                                }else{
+                                    if(value!=null){
+                                        if(!value.isEmpty){
+                                            userarraylist.clear()
+                                            val documnets=value.documents
+                                            for(document2 in documnets){
+                                                var image = document2.get("downloadurl")
+                                                var profilename = document2.get("profilename")
+                                                var profile="https://firebasestorage.googleapis.com/v0/b/simpleinstagramclone-7bb76.appspot.com/o/Images%2F2d89c7f9-7d9f-4311-be43-09f9c6e840a3.jpg?alt=media&token=efbc8a1a-10df-4733-9b0f-43bfa2736881"
+                                                if(profilename!=null){
+                                                    val user=User(profilename.toString(),image.toString())
+                                                    userarraylist.add(user)
+                                                }else{
+                                                    val user=User(username1.toString(),profile.toString())
+                                                    userarraylist.add(user)
+                                                }
+                                            }
+                                            searchadapter!!.notifyDataSetChanged()
+                                        }
+                                    }
 
+                                }
+                            }
                         }
-                        searchadapter!!.notifyDataSetChanged()
                     }
                 }
             }

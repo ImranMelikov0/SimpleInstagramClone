@@ -75,7 +75,7 @@ class SignupActivity : AppCompatActivity() {
         usermap["password"]=password
         usermap["username"]=username
         usermap["bio"]="I am using SimpleInstagramClone"
-        usermap["profile"]= R.drawable.app_ic
+        usermap["profile"]= "https://firebasestorage.googleapis.com/v0/b/simpleinstagramclone-7bb76.appspot.com/o/Images%2F2d89c7f9-7d9f-4311-be43-09f9c6e840a3.jpg?alt=media&token=efbc8a1a-10df-4733-9b0f-43bfa2736881"
         db.collection(email.toString()).add(usermap).addOnSuccessListener {
             finish()
         }.addOnFailureListener {
