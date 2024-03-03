@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.imranmelikov.simpleinstagramclone.Activities.MainActivity
 import com.imranmelikov.simpleinstagramclone.Adapters.AdapterRV_home
+import com.imranmelikov.simpleinstagramclone.R
 import com.imranmelikov.simpleinstagramclone.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -48,7 +51,7 @@ class HomeFragment : Fragment() {
     var email=auth.currentUser!!.email
     db.collection(email.toString()).addSnapshotListener { value, error ->
         if(error!=null){
-            Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
         }else{
             if(value!=null){
                 if(!value.isEmpty){

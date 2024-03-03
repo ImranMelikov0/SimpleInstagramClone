@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -47,16 +48,19 @@ class UploadActivity : AppCompatActivity() {
 
     fun selectimage(view: View){
         binding.uploadimage.setOnClickListener {
-            if(ContextCompat.checkSelfPermission(it.context,
-                    Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(it.context, Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
                 if(ActivityCompat.shouldShowRequestPermissionRationale(it.context as Activity,
                         Manifest.permission.READ_MEDIA_IMAGES)){
                     Snackbar.make(it,"Permission needed", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
                         View.OnClickListener {
-                            permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
-                    })
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                            }
+                        }).show()
                 }else{
-                    permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                    }
                 }
             }else{
                 var intenttogallery= Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)

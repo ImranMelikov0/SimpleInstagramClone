@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.imranmelikov.simpleinstagramclone.Activities.ProfilActivity
 import com.imranmelikov.simpleinstagramclone.Activities.UploadActivity
+import com.imranmelikov.simpleinstagramclone.R
 import com.imranmelikov.simpleinstagramclone.databinding.FragmentProfilBinding
 import de.hdodenhof.circleimageview.CircleImageView
 
