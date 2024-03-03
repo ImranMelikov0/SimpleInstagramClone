@@ -2,7 +2,9 @@ package com.imranmelikov.simpleinstagramclone.Activities
 
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -52,8 +54,16 @@ class ProfilActivity : AppCompatActivity() {
         registerlauncher()
 
         binding.closeProfileBtn.setOnClickListener {
-            var intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+
+           val alertDialog= AlertDialog.Builder(this)
+            alertDialog.setTitle("Do you want exit from unsave?")
+                alertDialog.setPositiveButton("Yes",DialogInterface.OnClickListener { dialog, which ->
+                    var intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }).setNegativeButton("No",DialogInterface.OnClickListener { dialog, which ->
+                    dialog.dismiss()
+                })
+            alertDialog.show()
         }
 
         logoutbtn(view)
@@ -86,7 +96,7 @@ class ProfilActivity : AppCompatActivity() {
                     Manifest.permission.READ_MEDIA_IMAGES)!= PackageManager.PERMISSION_GRANTED){
                 if(ActivityCompat.shouldShowRequestPermissionRationale(it.context as Activity,
                         Manifest.permission.READ_MEDIA_IMAGES)){
-                    Snackbar.make(it,"Permission need", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
+                    Snackbar.make(it,"Permission needed", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission",
                         View.OnClickListener {
                             permissionlauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
                         })
@@ -124,45 +134,10 @@ class ProfilActivity : AppCompatActivity() {
                 }
             })
     }
-//    fun Save(view:View){
-//        if(binding.BioProfile.text.toString().equals("")||binding.usernameProfile.text.toString().equals("")){
-//            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
-//        }else{
-//        val uuid= UUID.randomUUID()
-//        val imagename="$uuid.jpg"
-//        val storage=Firebase.storage
-//        var reference=storage.reference
-//        var imagereference=reference.child("Images").child(imagename)
-//        if(selectedimage!=null){
-//            imagereference.putFile(selectedimage!!).addOnSuccessListener {
-//                var uploadreference=storage.reference.child("Images").child(imagename)
-//                uploadreference.downloadUrl.addOnSuccessListener {
-//                    var downloadurl=it.toString()
-//                    if(auth.currentUser!=null){
-//                            var posthasmap = HashMap<String, Any>()
-//                            posthasmap.put("downloadurl", downloadurl)
-//                            posthasmap.put("profilename", binding.usernameProfile.text.toString())
-//                            posthasmap.put("profilebio", binding.BioProfile.text.toString())
-//
-//                            db.collection("Post").add(posthasmap).addOnSuccessListener {
-//                                finish()
-//                            }.addOnFailureListener {
-//                                Toast.makeText(this@ProfilActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
-//                            }
-//                    }
-//                }.addOnFailureListener {
-//                    Toast.makeText(this@ProfilActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }else{
-//            Toast.makeText(this,"Write username and bio",Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//    }
 
     fun Save(view:View){
         if(binding.BioProfile.text.toString().equals("")||binding.usernameProfile.text.toString().equals("")){
-            Toast.makeText(this,"Error",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Write name,bio and select image",Toast.LENGTH_SHORT).show()
         }else{
             val uuid= UUID.randomUUID()
             val imagename="$uuid.jpg"
@@ -188,8 +163,13 @@ class ProfilActivity : AppCompatActivity() {
                                         if(!value.isEmpty){
                                             var documents=value.documents
                                             for(document in documents){
-                                                var username=document.get("username")
-                                                db.collection(username.toString()).add(posthasmap).addOnSuccessListener {
+                                                var username1=document.get("username")
+//                                                db.collection(username1.toString()).add(posthasmap).addOnSuccessListener {
+//                                                    finish()
+//                                                }.addOnFailureListener {
+//                                                    Toast.makeText(this@ProfilActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
+//                                                }
+                                                db.collection("User").add(posthasmap).addOnSuccessListener {
                                                     finish()
                                                 }.addOnFailureListener {
                                                     Toast.makeText(this@ProfilActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -207,7 +187,57 @@ class ProfilActivity : AppCompatActivity() {
                     }
                 }
             }else{
-                Toast.makeText(this,"Write username and bio",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Select image",Toast.LENGTH_SHORT).show()
+            }
+        }
+        if(binding.BioProfile.text.toString().equals("")||binding.usernameProfile.text.toString().equals("")){
+            Toast.makeText(this,"Write name,bio and select image",Toast.LENGTH_SHORT).show()
+        }else{
+            val uuid= UUID.randomUUID()
+            val imagename="$uuid.jpg"
+            val storage=Firebase.storage
+            var reference=storage.reference
+            var imagereference=reference.child("Images").child(imagename)
+            if(selectedimage!=null){
+                imagereference.putFile(selectedimage!!).addOnSuccessListener {
+                    var uploadreference=storage.reference.child("Images").child(imagename)
+                    uploadreference.downloadUrl.addOnSuccessListener {
+                        var downloadurl=it.toString()
+                        if(auth.currentUser!=null){
+                            var posthasmap = HashMap<String, Any>()
+                            posthasmap.put("downloadurl", downloadurl)
+                            posthasmap.put("profilename", binding.usernameProfile.text.toString())
+                            posthasmap.put("profilebio", binding.BioProfile.text.toString())
+
+                            db.collection(auth.currentUser!!.email.toString()).addSnapshotListener { value, error ->
+                                if(error!=null){
+                                    Toast.makeText(this,error.localizedMessage,Toast.LENGTH_SHORT).show()
+                                }else{
+                                    if(value!=null){
+                                        if(!value.isEmpty){
+                                            var documents=value.documents
+                                            for(document in documents){
+                                                var username1=document.get("username")
+                                                db.collection(username1.toString()).add(posthasmap).addOnSuccessListener {
+                                                    finish()
+                                                }.addOnFailureListener {
+                                                    Toast.makeText(this@ProfilActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+                    }.addOnFailureListener {
+                        Toast.makeText(this@ProfilActivity,it.localizedMessage,Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }else{
+                Toast.makeText(this,"Select image",Toast.LENGTH_SHORT).show()
             }
         }
     }

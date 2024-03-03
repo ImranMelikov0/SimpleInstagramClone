@@ -23,11 +23,11 @@ class AdapterRV_notification(val postarraylist:ArrayList<Post>): RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: AdapterRV_Viewholder, position: Int) {
-//        var post=postarraylist.get(position)
-//        Glide.with(holder.itemView.context)
-//            .load(post.downloadurl)
-//            .into(holder.binding.notificationImageNotification)
-//        holder.binding.usernameNotification.text=post.username
-//        holder.binding.textNotification.text=post.comment
+        var post=postarraylist.get(position)
+        Glide.with(holder.itemView.context)
+            .load(post.downloadurl)
+            .into(holder.binding.notificationImageNotification)
+        holder.binding.usernameNotification.text=post.username
+        holder.binding.textNotification.text=post.comment
     }
 }

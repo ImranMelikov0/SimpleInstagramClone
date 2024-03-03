@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.imranmelikov.simpleinstagramclone.Activities.ProfilActivity
 import com.imranmelikov.simpleinstagramclone.Activities.UploadActivity
+import com.imranmelikov.simpleinstagramclone.R
 import com.imranmelikov.simpleinstagramclone.databinding.FragmentProfilBinding
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -55,12 +57,12 @@ class ProfilFragment : Fragment() {
                     if(!value.isEmpty){
                         val documnets=value.documents
                         for(document in documnets){
-                            var username=document.get("username") as String
-                            var bio=document.get("bio") as String
-                            var email=document.get("email") as String
-                            binding.profileFragmentUsername.text=username
-                            binding.fullNameProfileFrag.text=email
-                            binding.BioProfile.text=bio
+                            var username=document.get("username")
+                            var bio=document.get("bio")
+                            var email=document.get("email")
+                            binding.profileFragmentUsername.text=username.toString()
+                            binding.fullNameProfileFrag.text=email.toString()
+                            binding.BioProfile.text=bio.toString()
                         }
                     }
                 }
@@ -74,9 +76,8 @@ class ProfilFragment : Fragment() {
                         if(!value.isEmpty){
                             val documnets=value.documents
                             for(document1 in documnets){
-                                var username=document1.get("username")
-
-                                    db.collection(username.toString()).addSnapshotListener { value, error ->
+                                var username1=document1.get("username")
+                                    db.collection(username1.toString()).addSnapshotListener { value, error ->
                                         if(error!=null){
                                             Toast.makeText(this.context,error.localizedMessage, Toast.LENGTH_SHORT).show()
                                         }else{
@@ -85,17 +86,16 @@ class ProfilFragment : Fragment() {
                                                     val documnets=value.documents
                                                     for(document2 in documnets){
 
-                                                        var image = document2.get("downloadurl") as String
+                                                        var image = document2.get("downloadurl")
                                                         Glide.with(this)
-                                                            .load(image)
+                                                            .load(image.toString())
                                                             .into(binding.profileImageSearchRecyclerview)
 
-                                                        var profileusername = document2.get("profilename")
+                                                        var profilename = document2.get("profilename")
                                                         var profilebio = document2.get("profilebio")
-                                                        binding.profileFragmentUsername.text = profileusername.toString()
+                                                        binding.profileFragmentUsername.text = profilename.toString()
                                                         binding.fullNameProfileFrag.text = email.toString()
                                                         binding.BioProfile.text = profilebio.toString()
-
                                                     }
                                                 }
                                             }

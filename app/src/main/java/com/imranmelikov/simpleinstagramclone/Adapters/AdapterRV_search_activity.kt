@@ -9,12 +9,11 @@ import com.imranmelikov.simpleinstagramclone.Models.User
 import com.imranmelikov.simpleinstagramclone.databinding.ActivitySearchBinding
 import com.imranmelikov.simpleinstagramclone.databinding.RecyclerviewSearchActivityBinding
 
-class AdapterRV_search_activity(var mUser:ArrayList<User>, private var isFragment:Boolean=false)
+class AdapterRV_search_activity(var userarraylist:ArrayList<User>)
     : RecyclerView.Adapter<AdapterRV_search_activity.AdapterRV_search_activityViewholder>() {
     class AdapterRV_search_activityViewholder(var binding:RecyclerviewSearchActivityBinding):RecyclerView.ViewHolder(binding.root){
 
     }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -22,13 +21,17 @@ class AdapterRV_search_activity(var mUser:ArrayList<User>, private var isFragmen
         var binding=RecyclerviewSearchActivityBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return AdapterRV_search_activityViewholder(binding)
     }
+    fun filterList(filterlist: ArrayList<User>) {
+        userarraylist = filterlist
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount(): Int {
-        return mUser.size
+        return userarraylist.size
     }
 
     override fun onBindViewHolder(holder: AdapterRV_search_activityViewholder, position: Int) {
-        var user=mUser.get(position)
+        var user=userarraylist.get(position)
         holder.binding.textSearchRecyclerview.text=user.username
         Glide.with(holder.itemView.context)
             .load(user.profile)
